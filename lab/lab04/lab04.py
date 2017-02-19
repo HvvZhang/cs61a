@@ -149,6 +149,9 @@ def get_piece(board, row, column):
 def get_column_list(board):
     return list(zip(*board))
 
+def get_row_list(board):
+    return board
+
 def put_piece(board, max_rows, column, player):
     """Puts PLAYER's piece in the bottommost empty spot in the given column of
     the board. Returns a tuple of two elements:
@@ -256,7 +259,10 @@ def check_win_row(board, max_rows, max_cols, num_connect, row, player):
     >>> check_win_row(board, rows, columns, num_connect, 3, 'O')   # We only detect wins for the given player
     False
     """
-    "*** YOUR CODE HERE ***"
+    row = get_row_list(board)[row]
+    return player * num_connect in ''.join(row)
+
+
 
 def check_win_column(board, max_rows, max_cols, num_connect, col, player):
     """ Returns True if the given player has a vertical win in the given column,
@@ -281,7 +287,8 @@ def check_win_column(board, max_rows, max_cols, num_connect, col, player):
     >>> check_win_column(board, rows, columns, num_connect, 1, 'X')
     False
     """
-    "*** YOUR CODE HERE ***"
+    col = get_column_list(board)[col]
+    return player * num_connect in ''.join(col)
 
 def check_win(board, max_rows, max_cols, num_connect, row, col, player):
     """Returns True if the given player has any kind of win after placing a
@@ -317,8 +324,7 @@ def check_win(board, max_rows, max_cols, num_connect, row, col, player):
     """
     diagonal_win = check_win_diagonal(board, max_rows, max_cols, num_connect,
                                       row, col, player)
-    "*** YOUR CODE HERE ***"
-    return _______
+    return diagonal_win or check_win_column(board, max_rows, max_cols, num_connect, col, player) or check_win_row(board, max_rows, max_cols, num_connect, row, player)
 
 ###############################################################
 ### Functions for reference when solving the other problems ###
