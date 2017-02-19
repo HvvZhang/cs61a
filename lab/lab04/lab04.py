@@ -322,9 +322,10 @@ def check_win(board, max_rows, max_cols, num_connect, row, col, player):
     >>> check_win(board, rows, columns, num_connect, 1, 0, 'X')
     True
     """
-    diagonal_win = check_win_diagonal(board, max_rows, max_cols, num_connect,
-                                      row, col, player)
-    return diagonal_win or check_win_column(board, max_rows, max_cols, num_connect, col, player) or check_win_row(board, max_rows, max_cols, num_connect, row, player)
+    diagonal_win = check_win_diagonal(board, max_rows, max_cols, num_connect, row, col, player)
+    column_win = check_win_column(board, max_rows, max_cols, num_connect, col, player)
+    row_win = check_win_row(board, max_rows, max_cols, num_connect, row, player)
+    return diagonal_win or column_win or row_win
 
 ###############################################################
 ### Functions for reference when solving the other problems ###
