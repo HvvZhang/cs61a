@@ -536,15 +536,15 @@ def apply_effect(effect, bee, duration):
     # BEGIN Problem EC
     new_action = effect(bee.action)
     old_action = bee.action
-    applied_for = 0
+
 
     def final_action(colony):
-        nonlocal applied_for
-        if applied_for < duration:
-            new_action(colony)
-        else:
+        nonlocal duration
+        if duration == 0:
             old_action(colony)
-        applied_for += 1
+        else:
+            new_action(colony)
+            duration -= 1
 
     bee.action = final_action
 
