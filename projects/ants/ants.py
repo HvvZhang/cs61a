@@ -161,6 +161,8 @@ class Bee(Insect):
         elif self.armor > 0 and self.place.exit is not None:
             self.move_to(self.place.exit)
 
+    default_action = action
+
 
 class Ant(Insect):
     """An Ant occupies a place and does work for the colony."""
@@ -347,7 +349,7 @@ class NinjaAnt(Ant):
 
 # BEGIN Problem 5B
 class ScubaThrower(ThrowerAnt):
-    name = 'Scubs'
+    name = 'Scuba'
     watersafe = True
     implemented = True
     food_cost = 6
@@ -438,7 +440,7 @@ class QueenAnt(ScubaThrower):  # You should change this line
     name = 'Queen'
     # BEGIN Problem 9
     food_cost = 7
-    implemented = True   # Change to True to view in the GUI
+    implemented = True  # Change to True to view in the GUI
     queen_exists = False
     # END Problem 9
 
@@ -517,7 +519,7 @@ def make_slow(action):
             self.action(colony)
         else:
             pass
-    return new_action, 'slow'
+    return new_action
     # END Problem EC
 
 def make_stun(action):
@@ -528,17 +530,15 @@ def make_stun(action):
     # BEGIN Problem EC
     def new_action(self, colony):
         pass
-    return new_action, 'stun'
+    return new_action
     # END Problem EC
 
+# doesn't work
 def apply_effect(effect, bee, duration):
     """Apply a status effect to a BEE that lasts for DURATION turns."""
     # BEGIN Problem EC
-    new_action, applied_effect = effect(bee.effect)
-    # add some attributes to the Bee class. I see no other way. 
+    # do this later
     pass
-
-
 
     # END Problem EC
 
