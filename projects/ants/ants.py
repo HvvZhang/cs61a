@@ -161,8 +161,6 @@ class Bee(Insect):
         elif self.armor > 0 and self.place.exit is not None:
             self.move_to(self.place.exit)
 
-    default_action = action
-
 
 class Ant(Insect):
     """An Ant occupies a place and does work for the colony."""
@@ -349,7 +347,7 @@ class NinjaAnt(Ant):
 
 # BEGIN Problem 5B
 class ScubaThrower(ThrowerAnt):
-    name = 'Scuba'
+    name = 'Scubs'
     watersafe = True
     implemented = True
     food_cost = 6
@@ -440,7 +438,7 @@ class QueenAnt(ScubaThrower):  # You should change this line
     name = 'Queen'
     # BEGIN Problem 9
     food_cost = 7
-    implemented = True  # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
     queen_exists = False
     # END Problem 9
 
@@ -514,9 +512,9 @@ def make_slow(action):
     action -- An action method of some Bee
     """
     # BEGIN Problem EC
-    def new_action(self, colony):
+    def new_action(colony):
         if colony.time % 2 == 0:
-            self.action(colony)
+            action(colony)
         else:
             pass
     return new_action
@@ -528,17 +526,28 @@ def make_stun(action):
     action -- An action method of some Bee
     """
     # BEGIN Problem EC
-    def new_action(self, colony):
+    def new_action(colony):
         pass
     return new_action
     # END Problem EC
 
-# doesn't work
 def apply_effect(effect, bee, duration):
     """Apply a status effect to a BEE that lasts for DURATION turns."""
     # BEGIN Problem EC
-    # do this later
-    pass
+    new_action = effect(bee.action)
+    old_action = bee.action
+    applied_for = 0
+
+    def final_action(colony):
+        nonlocal applied_for
+        if applied_for < duration:
+            new_action(colony)
+        else:
+            old_action(colony)
+        applied_for += 1
+
+    bee.action = final_action
+
 
     # END Problem EC
 
@@ -549,8 +558,7 @@ class SlowThrower(ThrowerAnt):
     name = 'Slow'
     food_cost = 4
     # BEGIN Problem EC
-    "*** REPLACE THIS LINE ***"
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
     # END Problem EC
 
     def throw_at(self, target):
@@ -564,8 +572,7 @@ class StunThrower(ThrowerAnt):
     name = 'Stun'
     food_cost = 6
     # BEGIN Problem EC
-    "*** REPLACE THIS LINE ***"
-    implemented = False   # Change to True to view in the GUI
+    implemented = True   # Change to True to view in the GUI
     # END Problem EC
 
     def throw_at(self, target):
