@@ -94,6 +94,7 @@ def has_cycle_constant(link):
     """Return whether link contains a cycle.
 
     >>> s = Link(1, Link(2, Link(3)))
+    >>> s = Link(1); s.rest = s.  Link(1, Link(2, Link(3, Link(5, s))))
     >>> s.rest.rest.rest = s
     >>> has_cycle_constant(s)
     True
@@ -101,7 +102,23 @@ def has_cycle_constant(link):
     >>> has_cycle_constant(t)
     False
     """
-    pass
+    # I don't understand how this works. For later
+    if link is Link.empty:
+        return False
+
+    slow, fast = link, link.rest
+
+    while fast is not Link.empty:
+        if fast.rest == Link.empty:
+            return False
+        elif fast == slow or fast.rest == slow:
+            return True
+        else:
+            slow, fast = slow.rest, fast.rest.rest
+    return False
+
+
+
 
 
 
