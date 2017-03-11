@@ -13,7 +13,17 @@ def reverse_other(t):
     >>> t
     Tree(1, [Tree(3, [Tree(5, [Tree(8), Tree(7)]), Tree(6)]), Tree(2)])
     """
-    "*** YOUR CODE HERE ***"
+    # cool problem!
+    def helper(t, rev):
+        if t.is_leaf():
+            pass
+        else:
+            roots = [b.root for b in t.branches][::-1]
+            for b, r in zip(t.branches, roots):
+                if rev:
+                    b.root = r
+                helper(b, not rev)
+    helper(t, True)
 
 # Q7
 def cumulative_sum(t):
@@ -25,7 +35,12 @@ def cumulative_sum(t):
     >>> t
     Tree(16, [Tree(8, [Tree(5)]), Tree(7)])
     """
-    "*** YOUR CODE HERE ***"
+    if t.is_leaf():
+        pass
+    else:
+        for b in t.branches:
+            cumulative_sum(b)
+        t.root = t.root + sum(b.root for b in t.branches)
 
 # Q8
 def deep_map_mut(fn, link):
@@ -40,7 +55,14 @@ def deep_map_mut(fn, link):
     >>> print_link(link1)
     <9 <16> 25 36>
     """
-    "*** YOUR CODE HERE ***"
+    if link is Link.empty:
+        pass
+    else:
+        deep_map_mut(fn, link.rest)
+        if isinstance(link.first, Link):
+            deep_map_mut(fn, link.first)
+        else:
+            link.first = fn(link.first)
 
 # Q9
 def has_cycle(link):
@@ -57,7 +79,16 @@ def has_cycle(link):
     >>> has_cycle(u)
     False
     """
-    "*** YOUR CODE HERE ***"
+    def helper(link, have_seen=[]):
+        if link is Link.empty:
+            return False
+        elif link in have_seen:
+            return True
+        else:
+            have_seen.append(link)
+            return helper(link.rest)
+
+    return helper(link)
 
 def has_cycle_constant(link):
     """Return whether link contains a cycle.
@@ -70,4 +101,14 @@ def has_cycle_constant(link):
     >>> has_cycle_constant(t)
     False
     """
-    "*** YOUR CODE HERE ***"
+    pass
+
+
+
+
+
+
+
+
+
+
