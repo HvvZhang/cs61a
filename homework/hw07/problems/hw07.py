@@ -1,4 +1,4 @@
-class Fib():
+class Fib:
     """A Fibonacci number.
 
     >>> start = Fib()
