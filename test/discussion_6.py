@@ -486,8 +486,8 @@ def quicksort_list(lst):
         return []
     else:
         pivot = lst[0]
-        less = quicksort_list([x for x in lst if x < pivot])
-        greater = quicksort_list([x for x in lst if x > pivot])
+        less = quicksort_list([x for x in lst[1:] if x <= pivot])
+        greater = quicksort_list([x for x in lst[1:] if x > pivot])
         return less + [pivot] + greater
 
 def quicksort_link(link):
@@ -498,8 +498,24 @@ def quicksort_link(link):
     """
     if link is Link.empty:
         return link
-    # do the rest later
-    pass
+
+    pivot, original_link = link.first, link
+    less, greater = Link.empty, Link.empty
+
+    while link is not Link.empty:
+        curr, rest = link, link.rest
+        if curr.first >= pivot:
+            greater = Link(curr.first, greater) if curr is not original_link else greater
+        else:
+            less = Link(curr.first, less)
+        link = link.rest
+
+    less = quicksort_link(less)
+    greater = quicksort_link(greater)
+    new_link = extend_link(less, extend_link(Link(pivot), greater))
+
+    return new_link
+
     
 def widest_level(t):
     """
