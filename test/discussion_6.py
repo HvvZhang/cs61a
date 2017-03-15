@@ -398,16 +398,17 @@ def reverse(lnk):
     Link(3, Link(2, Link(1)))
     """
     # inefficient
-    def helper(lnk):
-        if lnk.rest is Link.empty or lnk is Link.empty:
-            pass
+    def helper(lnk, prev=Link.empty):
+        if lnk is Link.empty:
+            return prev
         else:
-            helper(lnk.rest)
-            insert_end(lnk.rest, lnk.first)
-            lnk.first, lnk.rest = lnk.rest.first, lnk.rest.rest
-
-    helper(lnk)
-    return lnk
+            return helper(lnk.rest, Link(lnk.first, prev))
+    
+    new_lnk = helper(lnk)
+    lnk.first = new_lnk.first
+    lnk.rest = new_lnk.rest
+    return new_lnk
+    
 
 def multiply_lnks(lst_of_lnks):
     """
