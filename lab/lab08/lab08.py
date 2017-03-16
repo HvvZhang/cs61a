@@ -107,7 +107,7 @@ def add_trees(t1, t2):
     """
     branches_t1 = [b for b in t1.branches]
     branches_t2 = [b for b in t2.branches]
-    stems = [add_trees(b1, b2) for b1, b2 in zip(branches_t1, branches_t2)]
+    stems = [add_trees(b1, b2) for b1, b2 in zip(branches_t1, branches_t2)] # zip is handling the base case
 
     short_length = len(stems)
     if short_length == len(branches_t1):
