@@ -27,7 +27,24 @@ def make_advanced_counter_maker():
     >>> tom_counter('global-count')
     1
     """
-    "*** YOUR CODE HERE ***"
+    global_count = 0
+    def counter():
+        count = 0
+        def name_counter(action):
+            nonlocal count
+            nonlocal global_count
+            if action == 'count':
+                count += 1
+                return count
+            elif action == 'global-count':
+                global_count += 1
+                return global_count
+            elif action == 'reset':
+                count = 0
+            elif action == 'global-reset':
+                global_count = 0
+        return name_counter
+    return counter
 
 def trade(first, second):
     """Exchange the smallest prefixes of first and second that have equal sum.
