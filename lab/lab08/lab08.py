@@ -105,22 +105,17 @@ def add_trees(t1, t2):
         5
       5
     """
-    if not t2:
-        return t1
-    elif not t1:
-        return t2
+    branches_t1 = [b for b in t1.branches]
+    branches_t2 = [b for b in t2.branches]
+    stems = [add_trees(b1, b2) for b1, b2 in zip(branches_t1, branches_t2)]
+
+    short_length = len(stems)
+    if short_length == len(branches_t1):
+        stems += branches_t2[short_length:]
     else:
-        branches_t1 = [b for b in t1.branches]
-        branches_t2 = [b for b in t2.branches]
-        stems = [add_trees(b1, b2) for b1, b2 in zip(branches_t1, branches_t2)]
+        stems += branches_t1[short_length:]
 
-        short_length = len(stems)
-        if short_length == len(branches_t1):
-            stems += branches_t2[short_length:]
-        else:
-            stems += branches_t1[short_length:]
-
-        return Tree(t1.root + t2.root, stems)
+    return Tree(t1.root + t2.root, stems)
 
 # Link
 class Link:
