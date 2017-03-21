@@ -91,7 +91,7 @@ def has_cycle(link):
     return helper(link)
 
 def has_cycle_constant(link):
-    """Return whether link contains a cycle.
+    """Return whether link contains a cycle. (constant space)
 
     >>> s = Link(1, Link(2, Link(3)))
     >>> s = Link(1); s.rest = s.  Link(1, Link(2, Link(3, Link(5, s))))

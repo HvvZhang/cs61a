@@ -74,16 +74,30 @@ def trade(first, second):
     [4, 3, 1, 4, 1]
     """
     m, n = 1, 1
+    flag = False
 
-    "*** YOUR CODE HERE ***"
+    while True:
+        sum_first = sum(first[:m])
+        sum_second = sum(second[:n])
+        if sum_first == sum_second:
+            flag = True 
+            break
+            
+        if sum_first < sum_second:
+            m += 1
+        else:
+            n += 1
 
-    if False: # change this line!
+        if m == len(first) or n == len(second):
+            break
+
+    if flag: # change this line!
         first[:m], second[:n] = second[:n], first[:m]
         return 'Deal!'
     else:
         return 'No deal!'
 
-def boom(n):
+def boom(n): # O(n**2)
     sum = 0
     a, b = 1, 1
     while a <= n*n:
