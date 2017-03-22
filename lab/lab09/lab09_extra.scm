@@ -40,9 +40,12 @@
 ; Q9
 (define (max a b) (if (> a b) a b))
 (define (min a b) (if (> a b) b a))
+(define (rem a b) (modulo a b))
 (define (gcd a b)
-  'YOUR-CODE-HERE
-)
+  (if (= b 0)
+    a
+    (gcd b (rem a b))))
+
 
 ;;; Tests
 (gcd 24 60)
@@ -51,16 +54,36 @@
 ; expect 21
 
 ; Q10
+(define (in-lst s x)
+  (if (null? s)
+     #f
+     (or (= x (car s)) (in-lst (cdr s) x))))
+
 (define (no-repeats s)
-  'YOUR-CODE-HERE
-)
+  (if (null? s)
+        s
+        (if (in-lst (cdr s) (car s))
+            (no-repeats (cdr s))
+            (cons (car s) (no-repeats (cdr s))))))
+
+; much better solution as shown in the lab
+(define (no-repeats s)
+  (if (null? s)
+        s
+        (cons (car s) 
+          (no-repeats (filter (lambda (x) (not (= (car s) x))) (cdr s))))))
 
 ; Q11
 (define (substitute s old new)
-  'YOUR-CODE-HERE
-)
+  (cond 
+   ((null? s) s)
+   ((equal? (car s) old) (cons new (substitute (cdr s) old new)))
+   ((pair? (car s)) (cons (substitute (car s) old new) (substitute (cdr s) old new)))
+   (else (cons (car s) (substitute (cdr s) old new)))))
 
 ; Q12
 (define (sub-all s olds news)
-  'YOUR-CODE-HERE
+  (cond
+   ((null? olds) s)
+   (else (sub-all (substitute s (car olds) (car news)) (cdr olds) (cdr news))))
 )
