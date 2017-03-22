@@ -77,9 +77,12 @@
 (define (substitute s old new)
   (cond 
    ((null? s) s)
-   ((equal? (car s) old) (cons new (substitute (cdr s) old new)))
-   ((pair? (car s)) (cons (substitute (car s) old new) (substitute (cdr s) old new)))
-   (else (cons (car s) (substitute (cdr s) old new)))))
+   ((equal? (car s) old) 
+      (cons new (substitute (cdr s) old new)))
+   ((pair? (car s)) 
+      (cons (substitute (car s) old new) (substitute (cdr s) old new)))
+   (else 
+      (cons (car s) (substitute (cdr s) old new)))))
 
 ; Q12
 (define (sub-all s olds news)
