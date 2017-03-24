@@ -210,11 +210,14 @@ def add(s, v):
     return v
 
 class Tree:
-    def __init__(self, root, branches=[]):
+    def __init__(self, root, branches=()):
         for c in branches:
             assert isinstance(c, Tree)
         self.root = root
-        self.branches = branches
+        if not branches:
+            self.branches = []
+        else:
+            self.branches = branches
 
     def __repr__(self):
         if self.branches:
@@ -542,16 +545,6 @@ def redundant_map(t, f):
     new_f = lambda x: f(f(x))
     t.branches = [redundant_map(b, new_f) for b in t.branches]
     return t
-
-
-
-
-
-
-
-
-
-
 
 
 
