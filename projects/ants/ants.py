@@ -536,8 +536,6 @@ def apply_effect(effect, bee, duration):
     # BEGIN Problem EC
     new_action = effect(bee.action)
     old_action = bee.action
-
-
     def final_action(colony):
         nonlocal duration
         if duration == 0:
@@ -550,8 +548,6 @@ def apply_effect(effect, bee, duration):
 
 
     # END Problem EC
-
-
 class SlowThrower(ThrowerAnt):
     """ThrowerAnt that causes Slow on Bees."""
 
