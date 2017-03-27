@@ -146,22 +146,9 @@ def read_tail(src):
         elif src.current() == '.':
             # BEGIN PROBLEM 2
             src.remove_front() # getting rid of the '.'
-            val = src.remove_front() 
+            val = scheme_read(src) # reads one expression
 
-            # there should only be one more element in the list
-            # after we hit a '.'
-            # This element can either be a primitive or an
-            # expression. 
-
-            # expression case
-            if val == '(':
-                rest = read_tail(src)
-                if src.current() == ')':  
-                    return rest
-                else:
-                    raise SyntaxError("Invalid number of elements after '.'")
-
-            # primitive case
+            # there should be no more expressions
             if src.current() == ')':
                 src.remove_front()
                 return val
