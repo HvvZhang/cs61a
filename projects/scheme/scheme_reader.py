@@ -60,6 +60,12 @@ class Pair:
             raise TypeError('length attempted on improper list')
         return n
 
+    def __getitem__(self, index):
+        if index == 0:
+            return self.first
+        else:
+            return self.second[index - 1]
+
     def __eq__(self, p):
         if not isinstance(p, Pair):
             return False
@@ -84,6 +90,10 @@ class nil:
 
     def __len__(self):
         return 0
+
+    def __getitem__(self, index):
+        """Had to implement to allow for-loop operations on Pair"""
+        raise IndexError
 
     def map(self, fn):
         return self
@@ -118,7 +128,7 @@ def scheme_read(src):
         # END PROBLEM 1
     elif val == "'":
         # BEGIN PROBLEM 7B
-        "*** REPLACE THIS LINE ***"
+        return Pair('quote', Pair(scheme_read(src), nil))
         # END PROBLEM 7B
     elif val not in DELIMITERS:
         return val

@@ -55,12 +55,6 @@
 ; expect 57
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;; Move the following (exit) line to run additional tests. ;;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(exit)
-
-
 ;;; 1.1.2
 
 (define size 2)
@@ -79,6 +73,41 @@ size
 (define circumference (* 2 pi radius))
 circumference
 ; expect 62.8318
+
+; new test cases 
+(define test (* 3 4))
+; expect test
+
+(define x 'booga)
+; expect x
+
+x
+; expect booga
+
+
+(begin (+ 2 2) 3)
+; expect 3
+
+(begin)
+; expect Error: too few operands in form
+
+(begin invalid)
+; expect Error: unknown identifier: invalid
+
+(lambda (x X) (+ x X))
+; expect Error: duplicate symbol: x
+
+(lambda (x x) (/ 1 0))
+; expect Error: duplicate symbol: x
+
+(define x (lambda (x) (+ x 1)))
+; expect x
+
+x
+; expect (lambda (x) (+ x 1))
+
+(define 'a 2 )
+; expect quote
 
 ;;; 1.1.4
 
@@ -107,6 +136,21 @@ circumference
 (f 5)
 ; expect 136
 
+(define (reverse lst)
+  (define (helper lst r)
+    (if (null? lst) 
+      r
+      (helper (cdr lst) 
+        (cons (car lst) 
+          r))))
+  (helper lst nil))
+; expect reverse
+
+(reverse '(1 2 3))
+; expect (3 2 1)
+
+(exit)
+
 ;;; 1.1.6
 
 (define (abs x)
@@ -126,6 +170,8 @@ circumference
   ((if (> b 0) + -) a b))
 (a-plus-abs-b 3 -2)
 ; expect 5
+
+
 
 ;;; 1.1.7
 
