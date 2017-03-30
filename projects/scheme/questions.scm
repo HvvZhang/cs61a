@@ -16,7 +16,16 @@
          rests))
 
 (define (zip pairs)
-  'replace-this-line)
+  (cond
+      ((null? pairs) (list '() '()))
+      ((null? (car pairs)) nil)
+      (else (append (list (map car 
+                               pairs))
+                      (zip (map cdr 
+                                pairs))))))
+
+;(zip '((1 2) (3 4) (5 6)))
+;(zip '((1 2)))
 
 ;; Problem 17
 ;; Returns a list of two-element lists
@@ -72,18 +81,34 @@
 (define lambda? (check-special 'lambda))
 (define define? (check-special 'define))
 (define quoted? (check-special 'quote))
-(define let?    (check-special 'let))
+(define let?    (or (check-special 'let)))
+  
+ 
+(define (check-membership lst value)
+  (if (null? lst)
+        #f
+        (or (equal? (car lst) value) 
+            (check-membership (cdr lst) 
+                              value))))
 
+(define (eval-all eval-fn expr)
+  (if (null? expr)
+        nil
+        
+       (cons (eval-fn (car expr)) (eval-all eval-fn (cdr expr)))))  
+
+
+  
 ;; Converts all let special forms in EXPR into equivalent forms using lambda
 (define (let-to-lambda expr)
   (cond ((atom? expr)
          ; BEGIN PROBLEM 19
-         'replace-this-line
+         expr
          ; END PROBLEM 19
          )
         ((quoted? expr)
          ; BEGIN PROBLEM 19
-         'replace-this-line
+         expr
          ; END PROBLEM 19
          )
         ((or (lambda? expr)
@@ -92,18 +117,28 @@
                (params (cadr expr))
                (body   (cddr expr)))
            ; BEGIN PROBLEM 19
-           'replace-this-line
+           (define body-evaluated (eval-all let-to-lambda body))
+           (if (check-membership params 'let)
+               (list form params (car body))
+               (append (list form params) 
+                       body-evaluated)) 
            ; END PROBLEM 19
            ))
         ((let? expr)
          (let ((values (cadr expr))
                (body   (cddr expr)))
            ; BEGIN PROBLEM 19
-           'replace-this-line
+           (define body-evaluated (eval-all let-to-lambda body))
+           (define parameters-evaluated (eval-all 
+                                         let-to-lambda 
+                                         (cadr (zip values))))
+           (cons (append (list 'lambda (car (zip values))) 
+                         body-evaluated) 
+                 parameters-evaluated)
            ; END PROBLEM 19
            ))
         (else
          ; BEGIN PROBLEM 19
-         'replace-this-line
+         (eval-all let-to-lambda expr)
          ; END PROBLEM 19
          )))
