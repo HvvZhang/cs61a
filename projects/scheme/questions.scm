@@ -118,20 +118,17 @@
                (body   (cddr expr)))
            ; BEGIN PROBLEM 19
            (define body-evaluated (eval-all let-to-lambda body))
-           (if (check-membership params 'let)
-               (list form params (car body))
-               (append (list form params) 
-                       body-evaluated)) 
+           (append (list form params) body-evaluated)
            ; END PROBLEM 19
            ))
         ((let? expr)
          (let ((values (cadr expr))
                (body   (cddr expr)))
            ; BEGIN PROBLEM 19
-           (define body-evaluated (eval-all let-to-lambda body))
-           (define parameters-evaluated (eval-all 
-                                         let-to-lambda 
-                                         (cadr (zip values))))
+           (define body-evaluated (eval-all let-to-lambda 
+                                            body))
+           (define parameters-evaluated (eval-all let-to-lambda 
+                                                  (cadr (zip values))))
            (cons (append (list 'lambda (car (zip values))) 
                          body-evaluated) 
                  parameters-evaluated)
