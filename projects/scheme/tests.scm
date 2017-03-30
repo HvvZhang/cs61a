@@ -149,8 +149,6 @@ x
 (reverse '(1 2 3))
 ; expect (3 2 1)
 
-(exit)
-
 ;;; 1.1.6
 
 (define (abs x)

@@ -5,28 +5,63 @@
 
 ; Some utility functions that you may find useful to implement.
 (define (map proc items)
-  'replace-this-line)
+  (cond
+      ((null? items) nil)
+      (else (cons (proc (car items)) 
+                    (map proc 
+                         (cdr items))))))
 
 (define (cons-all first rests)
-  'replace-this-line)
+  (map (lambda (x) (append (list first) x)) 
+         rests))
 
 (define (zip pairs)
   'replace-this-line)
 
 ;; Problem 17
 ;; Returns a list of two-element lists
+(define (reverse s)
+  (define (helper s reversed)
+      (cond
+          ((null? s) reversed)
+          (else (helper (cdr s) 
+                (cons (car s) 
+                      reversed)))))
+  (helper s nil))
+
 (define (enumerate s)
   ; BEGIN PROBLEM 17
-  'replace-this-line
-  )
+  (define (helper s enumerated val)
+    (cond
+      ((null? s) enumerated)
+      (else (helper (cdr s) 
+                    (cons (list val (car s)) 
+                          enumerated) 
+                    (+ 1 val)))))
+  (reverse (helper s nil 0)))
   ; END PROBLEM 17
 
 ;; Problem 18
 ;; List all ways to make change for TOTAL with DENOMS
-(define (list-change total denoms)
-  ; BEGIN PROBLEM 18
-  'replace-this-line
-  )
+;; John Denero is a god because a problem like this
+;; was OUT of my league before I started this course!
+(define (list-change total denoms) 
+  (define (helper total denoms current-sum-list)
+      (cond 
+          ((null? denoms) nil)
+          ((zero? total) (list current-sum-list))
+          ((> (car denoms) total) (helper total 
+                                            (cdr denoms) 
+                                            current-sum-list))
+          (else (append
+                    (helper (- total (car denoms)) 
+                            denoms 
+                            (cons (car denoms) 
+                                  current-sum-list)) 
+                    (helper total 
+                            (cdr denoms) 
+                            current-sum-list)))))
+  (map reverse (helper total denoms nil)))
   ; END PROBLEM 18
 
 ;; Problem 19

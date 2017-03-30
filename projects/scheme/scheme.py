@@ -96,7 +96,7 @@ class Frame:
             try:
                 return self.bindings[symbol]
             except KeyError:
-                raise SchemeError('Error: unknown identifier: {0}'.format(symbol))
+                raise SchemeError('unknown identifier: {0}'.format(symbol))
         else:
             try:
                 return self.bindings[symbol]
@@ -117,7 +117,7 @@ class Frame:
         child = Frame(self) # Create a new child with self as the parent
         # BEGIN PROBLEM 11
         if len(formals) != len(vals):
-            raise SchemeError('Error: expected {0} arguments but got {1}'.format(len(formals), len(vals)))
+            raise SchemeError('expected {0} arguments but got {1}'.format(len(formals), len(vals)))
 
         for f, v in zip(formals, vals):
             child.define(f, v)
@@ -321,7 +321,10 @@ def do_cond_form(expressions, env):
             test = scheme_eval(clause.first, env)
         if scheme_truep(test):
             # BEGIN PROBLEM 14
-            "*** REPLACE THIS LINE ***"
+            if clause.second == nil:
+                return test
+            else:
+                return eval_all(clause.second, env)
             # END PROBLEM 14
         expressions = expressions.second
 
@@ -339,7 +342,18 @@ def make_let_frame(bindings, env):
     if not scheme_listp(bindings):
         raise SchemeError('bad bindings list in let form')
     # BEGIN PROBLEM 15
-    "*** REPLACE THIS LINE ***"
+    for binding in bindings:
+        check_form(binding, 2, 2)
+
+    formals = bindings.map(lambda x: x[0])
+    vals = bindings.map(lambda x: x[1])
+    
+    check_formals(formals)
+
+    eval_with_env = lambda x: scheme_eval(x, env)
+    vals = vals.map(eval_with_env)
+    child_frame = env.make_child_frame(formals, vals)
+    return child_frame
     # END PROBLEM 15
 
 SPECIAL_FORMS = {
@@ -418,7 +432,13 @@ class MuProcedure(UserDefinedProcedure):
         self.body = body
 
     # BEGIN PROBLEM 16
-    "*** REPLACE THIS LINE ***"
+    def make_call_frame(self, args, env):
+        """Make a frame that binds the formal parameters to ARGS, a Scheme list
+        of values, for a dynamically-scoped call evaluated in environment ENV."""
+
+        # dynamic scoping
+        new_frame = env.make_child_frame(self.formals, args)
+        return new_frame
     # END PROBLEM 16
 
     def __str__(self):
@@ -434,7 +454,8 @@ def do_mu_form(expressions, env):
     formals = expressions.first
     check_formals(formals)
     # BEGIN PROBLEM 16
-    "*** REPLACE THIS LINE ***"
+    body = expressions.second
+    return MuProcedure(formals, body)
     # END PROBLEM 16
 
 SPECIAL_FORMS['mu'] = do_mu_form
