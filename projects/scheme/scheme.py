@@ -8,39 +8,38 @@ from ucb import main, trace
 # Eval/Apply #
 ##############
 
-def scheme_eval(expr, env, _=None): # Optional third argument is ignored
-    """Evaluate Scheme expression EXPR in environment ENV.
+# def scheme_eval(expr, env, _=None): # Optional third argument is ignored
+#     """Evaluate Scheme expression EXPR in environment ENV.
+#     >>> expr = read_line('(+ 2 2)')
+#     >>> expr
+#     Pair('+', Pair(2, Pair(2, nil)))
+#     >>> scheme_eval(expr, create_global_frame())
+#     4
+#     """
+#     # Evaluate atoms
+#     if scheme_symbolp(expr):
+#         return env.lookup(expr)
+#     elif self_evaluating(expr):
+#         return expr
 
-    >>> expr = read_line('(+ 2 2)')
-    >>> expr
-    Pair('+', Pair(2, Pair(2, nil)))
-    >>> scheme_eval(expr, create_global_frame())
-    4
-    """
-    # Evaluate atoms
-    if scheme_symbolp(expr):
-        return env.lookup(expr)
-    elif self_evaluating(expr):
-        return expr
+#     # All non-atomic expressions are lists (combinations)
+#     if not scheme_listp(expr):
+#         raise SchemeError('malformed list: {0}'.format(str(expr)))
+#     first, rest = expr.first, expr.second
+#     if scheme_symbolp(first) and first in SPECIAL_FORMS:
+#         return SPECIAL_FORMS[first](rest, env)
+#     else:
+#         # BEGIN PROBLEM 5
+#         operator = scheme_eval(first, env) # operator evaluated
 
-    # All non-atomic expressions are lists (combinations)
-    if not scheme_listp(expr):
-        raise SchemeError('malformed list: {0}'.format(str(expr)))
-    first, rest = expr.first, expr.second
-    if scheme_symbolp(first) and first in SPECIAL_FORMS:
-        return SPECIAL_FORMS[first](rest, env)
-    else:
-        # BEGIN PROBLEM 5
-        operator = scheme_eval(first, env) # operator evaluated
-
-        # checking if operator is 
-        # a valid procedure before 
-        # evaluating the operands
-        check_procedure(operator)
-        eval_with_env = lambda e: scheme_eval(e, env)
-        rest = rest.map(eval_with_env)
-        return scheme_apply(operator, rest, env)
-        # END PROBLEM 5
+#         # checking if operator is 
+#         # a valid procedure before 
+#         # evaluating the operands
+#         check_procedure(operator)
+#         eval_with_env = lambda e: scheme_eval(e, env)
+#         rest = rest.map(eval_with_env)
+#         return scheme_apply(operator, rest, env)
+#         # END PROBLEM 5
 
 def self_evaluating(expr):
     """Return whether EXPR evaluates to itself."""
@@ -108,7 +107,6 @@ class Frame:
         in a Scheme list of formal parameters FORMALS are bound to the Scheme
         values in the Scheme list VALS. Raise an error if too many or too few
         vals are given.
-
         >>> env = create_global_frame()
         >>> formals, expressions = read_line('(a b c)'), read_line('(1 2 3)')
         >>> env.make_child_frame(formals, expressions)
@@ -147,7 +145,6 @@ class PrimitiveProcedure(Procedure):
 
     def apply(self, args, env):
         """Apply SELF to ARGS in ENV, where ARGS is a Scheme list.
-
         >>> env = create_global_frame()
         >>> plus = env.bindings['+']
         >>> twos = Pair(2, Pair(2, nil))
@@ -374,7 +371,6 @@ def check_form(expr, min, max=float('inf')):
     """Check EXPR is a proper list whose length is at least MIN and no more
     than MAX (default: no maximum). Raises a SchemeError if this is not the
     case.
-
     >>> check_form(read_line('(a b)'), 2)
     """
     if not scheme_listp(expr):
@@ -389,7 +385,6 @@ def check_formals(formals):
     """Check that FORMALS is a valid parameter list, a Scheme list of symbols
     in which each symbol is distinct. Raise a SchemeError if the list of
     formals is not a well-formed list of symbols or if any symbol is repeated.
-
     >>> check_formals(read_line('(a b c)'))
     """
     symbols = set()
@@ -510,14 +505,22 @@ def complete_eval(val):
     """If VAL is an Thunk, returns the result of evaluating its expression
     part. Otherwise, simply returns VAL."""
     if isinstance(val, Thunk):
-        return scheme_eval(val.expr, val.env)
+        return scheme_eval(val.expr, val.env, tail=True)
     else:
         return val
 
+def tail_context(expr):
+    """Determines if an expression is in a tail context"""
+    return expr.second is nil
+
+# doesn't work yet
 def scheme_optimized_eval(expr, env, tail=False):
     """Evaluate Scheme expression EXPR in environment ENV. If TAIL, returns an
     Thunk object containing an expression for further evaluation."""
     # Evaluate atoms
+    print ("expr", expr)
+    print ("if?", expr.second.second.second) # gives nil
+    print ("first", expr.second.second.first)
     if scheme_symbolp(expr):
         return env.lookup(expr)
     elif self_evaluating(expr):
@@ -525,7 +528,7 @@ def scheme_optimized_eval(expr, env, tail=False):
 
     if tail:
         # BEGIN Extra Credit
-        "*** REPLACE THIS LINE ***"
+        return Thunk(expr, env)
         # END Extra Credit
     else:
         result = Thunk(expr, env)
@@ -536,13 +539,21 @@ def scheme_optimized_eval(expr, env, tail=False):
         if not scheme_listp(expr):
             raise SchemeError('malformed list: {0}'.format(str(expr)))
         first, rest = expr.first, expr.second
-        if (scheme_symbolp(first) and first in SPECIAL_FORMS):
+        if scheme_symbolp(first) and first in SPECIAL_FORMS:
             result = SPECIAL_FORMS[first](rest, env)
         else:
             # BEGIN Extra Credit
-            "*** REPLACE THIS LINE ***"
+            if tail_context(expr):
+                result = scheme_optimized_eval(first, env, tail=True)
+            else:
+                operator = complete_eval(scheme_optimized_eval(first, env, tail=False))
+                check_procedure(operator)
+                eval_with_env = lambda e: scheme_optimized_eval(e, env, tail=False)
+                rest = rest.map(eval_with_env).map(complete_eval)
+                result = scheme_apply(operator, rest, env)
             # END Extra Credit
-    return result
+    return complete_eval(result)
+
 
 ################################################################
 # Uncomment the following line to apply tail call optimization #
