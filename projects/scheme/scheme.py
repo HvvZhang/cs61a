@@ -545,6 +545,7 @@ def scheme_optimized_eval(expr, env, tail=False):
             # BEGIN Extra Credit
             if tail_context(expr):
                 result = scheme_optimized_eval(first, env, tail=True)
+                
             else:
                 operator = complete_eval(scheme_optimized_eval(first, env, tail=False))
                 check_procedure(operator)

@@ -8,4 +8,6 @@ PRO LIFE TIP: If anyone is reading this and you've reached the scheme project, m
 
 Note: While the above method makes our code look cleaner, it is inefficient. 
  
-Have fun! 
+Have fun!
+
+Note to self: Finish the extra challenge problem in the scheme project. 
