@@ -102,7 +102,7 @@ def has_cycle_constant(link):
     >>> has_cycle_constant(t)
     False
     """
-    # I don't understand how this works. For later
+
     if link is Link.empty:
         return False
 
@@ -116,6 +116,8 @@ def has_cycle_constant(link):
         else:
             slow, fast = slow.rest, fast.rest.rest
     return False
+
+    
 
 
 
